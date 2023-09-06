@@ -1,0 +1,109 @@
+<div class="card text-center" style="margin-top: 200px;">
+  <div class="card-body">
+    <h5 class="card-title">Bùi Bách Toàn</h5>
+    <p class="card-text">toanbbph25296@fpt.edu.vn</p>
+    <a href="https://www.facebook.com/bachtoan2804" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"
+  integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"
+  integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.3/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+
+<script>
+  function validateForm() {
+      let prName = document.getElementById("prName").value;
+      let prPrice = document.getElementById("prPrice").value;
+
+      if (prName === "" || isNaN(prPrice) || prPrice < 0 || prPrice ==="" ){
+          alert("Vui lòng nhập đầy đủ thông tin và giá tiền phải là một số");
+          return false;
+      }
+      return true;
+  }
+  function validateLogin() {
+      let name = document.getElementById("loginUsername").value;
+      let pass = document.getElementById("loginPassword").value;
+
+      if (name === "" || pass === ""){
+          alert("Vui lòng nhập đầy đủ thông tin");
+          return false;
+      }
+      return true;
+  }
+</script>
+
+
+
+
+<script>
+  const form = document.getElementById('signUpForm');
+
+  form.addEventListener('submit', function (event) {
+    const password = form.elements.userPassword.value;
+    const rePassword = form.elements.userRePassword.value;
+    if (password !== rePassword) {
+      alert('Mật khẩu nhập lại không khớp!');
+      event.preventDefault();
+    }
+  });
+</script>
+<script>
+  var updateBtns = document.querySelectorAll("#update-btn");
+  var updateModal = document.querySelector("#updateModal");
+  var formUpdate = updateModal.querySelector("#formUpdate");
+
+  updateBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var product = JSON.parse(btn.dataset.product);
+      formUpdate.querySelector("#productId").value = product._id;
+
+      formUpdate.querySelector("#productName").value = product.name;
+      formUpdate.querySelector("#productGroup").textContent = product.id_group.name;
+
+
+      formUpdate.querySelector("#productPrice").value = product.price;
+      formUpdate.querySelector("#productDescription").value = product.description;
+    });
+  });
+</script>
+
+<script>
+  var updateBtns = document.querySelectorAll("#update-btn");
+  var updateModal = document.querySelector("#updateModal");
+  var formUpdate = updateModal.querySelector("#formUpdate");
+
+  updateBtns.forEach(function (btn) {
+    btn.addEventListener("click", function () {
+      var product = JSON.parse(btn.dataset.product);
+      formUpdate.querySelector("#groupId").value = product._id;
+
+      formUpdate.querySelector("#groupName").value = product.name;
+    });
+  });
+</script>
+
+<script>
+  $('#deleteModal').on('show.bs.modal', function (event) {
+    var button = $(event.relatedTarget) // Nút mở modal
+    var productId = button.data('product-id') // Lấy giá trị của thuộc tính data-product-id
+    var deleteModal = document.querySelector("#deleteModal");
+    var formDelete = deleteModal.querySelector("#formDelete");
+    formDelete.querySelector("#productIdDelete").value = productId;
+    $("#confirmDeleteBtn").click(function () {
+      // Xử lý xoá sản phẩm ở đây
+
+      // Sau khi xoá thành công, ẩn dialog
+      $('#deleteModal').modal('hide');
+    });
+  })
+</script>
+
+
+</body>
+
+</html>

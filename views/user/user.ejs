@@ -1,0 +1,77 @@
+<%- include('../inc/top.ejs') %>
+<div class="container-fluid mt-3" style="margin-bottom: 500px;">
+
+    <h1>Danh sách người dùng</h1>
+    <div class="row mb-5">
+      <div class="col-md-12 d-flex justify-content-end">
+        <form action="/users/reload" method="POST">
+          <button type="submit" class="btn" >
+            <i class="bi bi-arrow-clockwise"></i>
+          </button>
+        </form>
+        <form action="/users/searchUser" method="POST">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Tên đăng nhập" name="userName">
+            <button class="btn btn-outline-secondary" type="submit">Search</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div style="text-align: center;">
+      <%= msg %>
+    </div>
+
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+          <tr>
+            <th style="width: 5%">ID</th>
+            <th style="width: 30%">Tên đăng nhập</th>
+            <th style="width: 40%">Email</th>
+            <th style="width: 10%">Vai trò</th>
+            <th style="width: 25%">Hành động</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% for (let i = 0; i < listUser.length; i++) { %>
+          <tr>
+            <td><%= i + 1 %></td>
+            <td><%= listUser[i].name %></td>
+            <td><%= listUser[i].email %></td>
+            <td><%= listUser[i].group %></td>
+            <td style="max-width: 10px; padding-left: 20px;">
+              <button style="margin-left: 60px;" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-product-id="<%= listUser[i]._id %>">
+                <i class="bi bi-trash" style="font-size: 25px;"></i> 
+              </button>
+              <!-- <button id="update-btn" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#updateModal" data-product="<%= JSON.stringify(listUser[i]) %>">
+                <i class="bi bi-pencil-square" style="font-size: 25px;"></i>
+              </button> -->
+            </td> 
+          </tr>
+          <% } %> 
+        </tbody>
+      </table>
+      
+      <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xoá người dùng</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/users/deleteUser" method="post" id="formDelete">
+                <input type="hidden" name="productIdDelete" id="productIdDelete">
+                <div class="modal-body">
+                Bạn có chắc muốn xoá người dùng này không?
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Xoá</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+</div>
+
+<%- include('../inc/bottom.ejs') %>

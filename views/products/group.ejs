@@ -1,0 +1,122 @@
+<%- include('../inc/top.ejs') %>
+<div class="container-fluid mt-3">
+
+    <h1><%= title %></h1>
+    <!-- table-striper: tạo màu phân biệt các hàng -->
+    <div class="d-grid gap-2 col-3 mx-auto mb-5">
+        <button id="add-btn" class="btn btn-primary" type="button" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">Thêm thể loại</button>
+    </div>
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr >
+                <th style="max-width: 18px;">Stt</th>          
+                <th >Thể loại</th>             
+                <th style="max-width: 10px; padding-left: 20px; text-align: center;">Chỉnh sửa</th>                    
+            </tr>
+        </thead>
+        <tbody>    
+            <% for (let i = 0; i < listGroup.length; i++) { %>
+                <tr >
+                    <td style="max-width: 18px;"><%= i + 1 %></td>
+                    <td style="font-size: larger;"><%= listGroup[i].name %></td>
+                    
+                    <td style="max-width: 10px; padding-left: 20px;">
+                        <button style="margin-left: 60px;"class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-product-id="<%= listGroup[i]._id %>"">
+                          <i class="bi bi-trash" style="font-size: 25px;"></i> 
+                        </button>
+                                              
+                        <button id="update-btn" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#updateModal" data-product="<%= JSON.stringify(listGroup[i]) %>" >
+                          <i class="bi bi-pencil-square" style="font-size: 25px;"></i>
+                        </button>
+                    </td>                        
+                </tr>
+            <% } %>  
+        </tbody>
+    </table>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xoá thể loại</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/products/deleteGroup" method="post" id="formDelete">
+                <input type="hidden" name="productIdDelete" id="productIdDelete">
+                <div class="modal-body">
+                Bạn có chắc muốn xoá thể loại phẩm này không?
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Xoá</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">Thêm thể loại</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" id="add-form">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body col-md-12 ">
+                                    <form action="/products/postGroup" method="POST" >
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Tên thể loại</label>
+                                            <input type="text" class="form-control"  name="groupName">
+                                        </div>                      
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">Sửa thể loại</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" id="add-form">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body col-md-12 ">
+                                    <form action="/products/updateGroup" method="post"  id="formUpdate" >
+
+                                        <input type="hidden" name="groupId" id="groupId">
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Tên thể loại</label>
+                                            <input type="text" class="form-control" id ="groupName" name="groupName">
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+    
+
+<%- include('../inc/bottom.ejs') %>

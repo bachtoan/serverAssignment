@@ -1,0 +1,227 @@
+<%- include('../inc/top.ejs') %>
+<div class="container-fluid mt-3">
+
+    <h1><%= title %></h1>
+    <!-- table-striper: tạo màu phân biệt các hàng -->
+    <div class="d-grid gap-2 col-3 mx-auto mb-5">
+        <button id="add-btn" class="btn btn-primary" type="button" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">Thêm sản phẩm</button>
+    </div>
+
+    <div class="row mb-5">
+        <div class="col-md-12 d-flex align-items-center justify-content-end">
+            <h5 class="mb-0">Lọc thể loại: </h5>
+            <form class="ms-5" action="/products/filter" method="POST">
+                <select name="filterGroup" class="mt-3 me-3">
+                    <option selected value="">Tất cả</option>
+                    <% listGroup.forEach((objGroup) => { %>                                                  
+                        <option value="<%= objGroup._id %>" > <%= objGroup.name%> </option>
+                    <% }); %>             
+                </select>
+                <button class="btn btn-primary" type="submit">Lọc</button>
+            </form>
+            <h5 class="mb-0 ms-5">Lọc theo giá: </h5>
+            <form class="ms-5" action="/products/filterPrice" method="POST">
+                <select name="filterGroup" class="mt-3 me-3">
+                    <option selected value="">Tất cả</option>
+                    <option value="1">Từ thấp đến cao</option>
+                    <option value="2">Từ cao đến thấp</option>                              
+                </select>
+                <button class="btn btn-primary" type="submit">Lọc</button>
+            </form>
+        </div>
+      </div>
+    
+      <div style="text-align: center;">
+        <% if (msg) { %>
+            <span class="text-danger"><%= msg %></span>
+          <% } %>
+      </div>
+      
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr >
+                <th style="width: 10px;">Stt</th>
+                <th style="width: 120px;">Hình ảnh</th>
+                <th style="width: 300px; font-size: larger; overflow: auto; ">Tên sản phẩm</th>
+                <th style="width: 200px;">Phân loại</th>   
+                <th style="width: 200px;">Giá tiền</th>       
+                <th style="max-width: 10%;">Mô tả</th>
+                <th style="width: 140px;">Hành động</th>
+                
+            </tr>
+        </thead>
+        <tbody>    
+            <% for (let i = 0; i < listProduct.length; i++) { %>
+                <tr >
+                    <td><%= i + 1 %></td>
+                    <td style="text-align: center; vertical-align: middle;"><img src="/uploads/<%= listProduct[i].image %>" alt="null" style="width: 100px; height: 100px;"></td>
+                    <td style="font-size: larger; overflow: auto;"> <a href="/products/<%= listProduct[i]._id%>" ><%= listProduct[i].name %> <i class="bi bi-eye"></i> </a>    </td>
+                    <td >
+                        <% if (listProduct[i].id_group._id.toString() === "642990c81356b44efb840c02") { %>
+                            <span style="color: red;">Chưa có phân loại</span>
+                        <% } else { %>
+                            <%= listProduct[i].id_group.name %>
+                            
+                        <% } %>
+                    </td>
+                    <td style="color: red; font-size: larger;" ><%= listProduct[i].price %></td>      
+                    <td >
+                        <div style="max-height: 100px; overflow: auto;"><%= listProduct[i].description %></div>
+                    </td>
+                    
+                    <td style=" padding-left: 15px;">
+                        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#deleteModal" data-product-id="<%= listProduct[i]._id %>"">
+                          <i class="bi bi-trash" style="font-size: 25px;"></i> 
+                        </button>
+                                              
+                        <button id="update-btn" class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#updateModal" data-product="<%= JSON.stringify(listProduct[i]) %>" >
+                          <i class="bi bi-pencil-square" style="font-size: 25px;"></i>
+                        </button>
+                      </td>                                         
+                </tr>
+            <% } %>  
+        </tbody>
+    </table>
+
+    <div class="row justify-content-end">
+        <div class="col-auto">
+          <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-end">
+              <% for (let i = 1; i <= countPage; i++) { %>
+                <li class="page-item">
+                  <a class="page-link" href="/products/<%= i %>"><%= i %></a>
+                </li>
+              <% } %>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+    <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xoá sản phẩm</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="/products/delete" method="post" id="formDelete">
+                <input type="hidden" name="productIdDelete" id="productIdDelete">
+                <div class="modal-body">
+                Bạn có chắc muốn xoá sản phẩm này không?
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                <button type="submit" class="btn btn-danger" id="confirmDeleteBtn">Xoá</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">Thêm sản phẩm</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" id="add-form">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body col-md-12 ">
+                                    <form action="/products/post" method="post" enctype="multipart/form-data" onsubmit="return validateForm()" >
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Tên sản phẩm</label>
+                                            <input type="text" class="form-control" id="prName" name="productName">
+                                        </div>
+                                        <div class="mb-3 form-group">
+                                            <label for="productGroup">Thể loại</label>
+                                            <select name="productGroup" class="form-control">
+                                                <% listGroup.forEach((objGroup) => { %>                                                  
+                                                    <option value="<%= objGroup._id %>" > <%= objGroup.name%> </option>
+                                                <% }); %>
+                                            </select>                                      
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImage" class="form-label">Hình ảnh</label>
+                                            <input type="file" class="form-control"  name="productImage">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="describe" class="form-label">Mô tả</label>
+                                            <!-- <input type="text" class="form-control" id="describe" name="productDescribe"> -->
+                                            <textarea class="form-control" aria-label="With textarea"  name="productDescription" ></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImage" class="form-label">Giá tiền</label>
+                                            <input type="text" class="form-control" id="prPrice" name="productPrice">
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary" id="btn-add">Thêm</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel" style="color: white;">Sửa thông tin sản phẩm</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="container" id="add-form">
+                        <div class="row">
+                            <div class="card">
+                                <div class="card-body col-md-12 ">
+                                    <form action="/products/update" method="post" enctype="multipart/form-data" id="formUpdate" >
+
+                                        <input type="hidden" name="productId" id="productId">
+                                        <div class="mb-3">
+                                            <label for="productName" class="form-label">Tên sản phẩm</label>
+                                            <input type="text" class="form-control" id ="productName" name="productName">
+                                        </div>
+                                        <div class="mb-3 form-group">
+                                            <label for="productGroup">Thể loại</label>
+                                            <select name="productGroup" class="form-control">
+                                                <option id="productGroup"></option>
+                                                <% listGroup.forEach((objGroup) => { %>                                                  
+                                                    <option value="<%= objGroup._id %>" > <%= objGroup.name%> </option>
+                                                <% }); %>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImage" class="form-label">Hình ảnh</label>
+                                            <input type="file" class="form-control" id="productImage"  name="productImage">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="describe" class="form-label">Mô tả</label>
+                                            <!-- <input type="text" class="form-control" id="describe" name="productDescribe"> -->
+                                            <textarea class="form-control" aria-label="With textarea" id="productDescription"  name="productDescription" ></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="productImage" class="form-label">Giá tiền</label>
+                                            <input type="text" class="form-control" id="productPrice" name="productPrice">
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<%- include('../inc/bottom.ejs') %>

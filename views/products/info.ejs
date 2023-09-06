@@ -1,0 +1,13 @@
+<%- include('../inc/top.ejs') %>
+<div class="row" style="margin-bottom: 250px; margin-top: 50px;">
+    <div class="col-md-6" >
+      <img src="/uploads/<%= objProduct.image %>" alt="Product Image" style="display: block; margin: auto; max-width: 500px;">
+    </div>
+    <div class="col-md-6">
+      <h2><%= objProduct.name %></h2>
+      <p>Phân loại:  <strong><%= objGroup.name %></strong></p>
+      <p>Giá:  <strong style="color: red; font-size: large;"><%= objProduct.price %></strong></p>
+      <p>Mô tả:  <strong><%= objProduct.description %></strong></p>
+    </div>
+  </div>
+<%- include('../inc/bottom.ejs') %>
